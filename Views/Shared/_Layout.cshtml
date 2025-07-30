@@ -1,0 +1,117 @@
+﻿<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>@ViewData["Title"] - testingSite</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/testingSite.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <header>
+    <nav class="navbar navbar-light bg-white border-bottom box-shadow mb-3 navbar-expand">
+        <div class="container-fluid">
+            @{
+                string role = User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value;
+                string controller = role switch
+                {
+                    "admin" => "Admin",
+                    "student" => "Student",
+                    "teacher" => "Teacher",
+                    _ => "Home"
+                };
+            }
+
+            @if (!string.IsNullOrEmpty(role))
+            {
+                <a class="navbar-brand" asp-controller="@controller" asp-action="Dashboard">testingSite</a>
+            }
+            else
+            {
+                <a class="navbar-brand" asp-controller="User" asp-action="Auth">testingSite</a>
+            }
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
+                    aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarContent">
+                <ul class="navbar-nav ms-auto">
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="User" asp-action="Logout">Выйти</a>
+                        </li>
+                    }
+                    else
+                    {
+                        <li class="nav-item">
+                            <a class="nav-link" asp-controller="User" asp-action="Auth">Войти</a>
+                        </li>
+                    }
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    </header>
+    <main role="main" class="container pb-3" style="">
+        @RenderBody()
+    </main>
+	<footer id="footWrapper">
+        <div class="footer-top" >
+			<div class="container">
+				<p class="lg-txt f-left">
+					ФГБОУ ВО «Армавирский государственный педагогический университет».
+				</p>					
+			</div>
+		</div>     
+		<div class="footer-middle">
+			<div class="container">
+			    <div class="row">					  	
+					<div class="col-md-4 first">
+						<h3>СОЦИАЛЬНЫЕ СЕТИ</h3>
+                        <p class="foot-about-par">
+                            Официальные страницы Армавирского государственного педагогического университета
+                        </p>
+			            <div class="social-list half-icons">
+							<a href="https://vk.com/agpu_official" target="_blank"><i class="fa fa-vk ic-vk ic-colored sm-icon"></i><span>ВКонтакте</span></a>
+                            <a href="https://t.me/agpu_official" target="_blank"><i class="fa fa-paper-plane ic-vk ic-colored sm-icon"></i><span>Telegram</span></a>
+						</div>
+                    </div>                					  
+                    <div class="col-md-4">
+                        <h3>Дополнительно</h3>
+                        <div class="recent-posts-footer">
+                            <h4>
+                                <a href="/bitrix/admin/#authorize">Авторизация</a>
+                            </h4>										
+                        </div>
+                    </div>						  
+                    <div class="col-md-4 last contact-widget">
+                        <h3>Контакты</h3>
+                            <p class="foot-about-par">
+                                Понедельник-пятница с 8.00 до 17.00, суббота – с 8.00 до 13.00. 
+                            </p>
+                        <ul class="details">
+                            <li><i class="fa fa-map-marker"></i><span>352901, Южный федеральный округ, Краснодарский край, город Армавир, улица Розы Люксембург, д.159.</span></li>
+                            <li><i class="fa fa-envelope"></i><span>rektoragpu@mail.ru</span></li>
+                            <li><i class="fa fa-phone"></i><span><a href="tel:+78613733560">8 (86137) 3 35 60</a></span></li>
+                        </ul>
+                    </div>
+                </div>							  							  							  							  
+		    </div>
+        </div>
+		<div class="footer-bottom">
+			<div class="container">				
+				<div class="copyrights">© <b class="main-color">ФГБОУ ВО АГПУ</b> 2023. Все права защищены.</div>
+			</div>
+		</div>
+	</footer>
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>
