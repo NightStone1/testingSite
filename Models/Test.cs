@@ -17,4 +17,6 @@ public class Test
     public DateTime CreatedDate { get; set; } = DateTime.Now;
 
     public ICollection<Question>? Questions { get; set; }
+
+    public bool IsDeleted { get; set; } = false; 
 }

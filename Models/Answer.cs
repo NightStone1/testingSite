@@ -7,6 +7,7 @@ public class Answer
     public int Id { get; set; }
 
     public int QuestionId { get; set; }
+    
     public Question Question { get; set; }
 
     [Required]
@@ -15,4 +16,6 @@ public class Answer
     public bool IsCorrect { get; set; } = false;
 
     public ICollection<UserAnswer>? UserAnswers { get; set; }
+    
+    public bool IsDeleted { get; set; } = false;
 }

@@ -13,4 +13,17 @@ public class StudentController : Controller
     {
         return View();
     }
+        public IActionResult Lectures()
+    {
+        return PartialView("Lectures");
+    }
+
+    public IActionResult Tests()
+    {
+        return PartialView("Tests");
+    }
+    public IActionResult Progress()
+    {
+        return PartialView("Progress");
+    }
 }

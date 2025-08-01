@@ -1,26 +1,23 @@
 @{
     ViewData["Title"] = "Вход в систему";
-    Layout = "_Layout";
+    Layout = "_LayoutLogin";
 }
-
 <h2>Вход</h2>
-
 <form asp-action="Auth" method="post">
     <input type="hidden" name="returnUrl" value="@ViewBag.ReturnUrl" />
     
     <div>
         <label for="username">Логин:</label>
-        <input type="text" id="username" name="username" required />
+        <input type="text" class="form-control" id="username" name="username" required />
     </div>
 
     <div>
         <label for="password">Пароль:</label>
-        <input type="password" id="password" name="password" required />
+        <input type="password" class="form-control"  id="password" name="password" required />
     </div>
 
-    <button type="submit">Войти</button>
+    <button class="btn" type="submit">Войти</button>
 </form>
-
 @if (ViewBag.Error != null)
 {
     <p style="color:red">@ViewBag.Error</p>

@@ -8,8 +8,12 @@ public class Discipline
 
     [Required]
     public string Name { get; set; }
+    
     public string? Content { get; set; }
 
     public ICollection<TestCategory>? TestCategories { get; set; }
+
     public ICollection<Lecture>? Lectures { get; set; }
+
+    public bool IsDeleted { get; set; } = false; 
 }

@@ -7,6 +7,7 @@ public class Attempt
     public int Id { get; set; }
 
     public int AssignmentId { get; set; }
+
     public Assignment Assignment { get; set; }
 
     public DateTime StartTime { get; set; } = DateTime.Now;
@@ -18,4 +19,6 @@ public class Attempt
     public bool IsPassed { get; set; } = false;
 
     public ICollection<UserAnswer>? UserAnswers { get; set; }
+
+    public bool IsDeleted { get; set; } = false;    
 }

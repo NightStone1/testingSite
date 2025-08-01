@@ -1,0 +1,55 @@
+@{
+    string sidebarPartial = "";
+
+    if (User.Identity.IsAuthenticated)
+    {
+        if (User.IsInRole("admin"))
+        {
+            sidebarPartial = "_SidebarAdmin";
+        }
+        else if (User.IsInRole("teacher"))
+        {
+            sidebarPartial = "_SidebarTeacher";
+        }
+        else if (User.IsInRole("student"))
+        {
+            sidebarPartial = "_SidebarStudent";
+        }
+    }
+}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="utf-8" />
+    <title>@ViewData["Title"] - testingSite</title>
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
+    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/testingSite.styles.css" asp-append-version="true" />
+</head>
+<body>
+    <partial name="_Header" />
+    <main style="display: flex;">
+        <div class="border shadow-sm p-3 m-4 rounded" style="flex: 1;  background-color: #eee;">
+            @if (!string.IsNullOrEmpty(sidebarPartial))
+            {
+                @await Html.PartialAsync(sidebarPartial)
+            }
+        </div>
+        <div class="border shadow-sm p-3 m-4 rounded" style="flex: 2;">
+            @RenderBody()
+        </div>
+    </main>
+    <partial name="_Footer"/>
+    <div id="overlayBackdrop" class="overlay-backdrop">
+        <div class="overlay-content" onclick="event.stopPropagation()">
+        </div>
+    </div>
+    @section Scripts {
+        @RenderSection("Scripts", required: false)
+    }
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="~/js/site.js" asp-append-version="true"></script>
+    @await RenderSectionAsync("Scripts", required: false)
+</body>
+</html>

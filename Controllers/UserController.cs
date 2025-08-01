@@ -17,29 +17,6 @@ public class UserController : Controller
     {
         _context = context;
     }
-    public IActionResult Register()
-    {
-        return View();
-    }
-    // POST: /User/Register
-    [HttpPost]
-    public IActionResult Register(string username, string password, string role)
-    {
-        if (_context.Users.Any(u => u.Username == username))
-        {
-            ModelState.AddModelError("", "Пользователь с таким именем уже существует");
-            return View();
-        }
-        var user = new User
-        {
-            Username = username,
-            PasswordHash = BCrypt.Net.BCrypt.HashPassword(password),
-            Role = role // "admin", "teacher", "student"
-        };
-        _context.Users.Add(user);
-        _context.SaveChanges();
-        return RedirectToAction("Auth");
-    }
     public IActionResult Auth(string returnUrl = null)
     {
         if (User.Identity?.IsAuthenticated == true)

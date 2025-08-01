@@ -20,7 +20,7 @@ namespace testingSite.Data
         public DbSet<Assignment> Assignments { get; set; }
         public DbSet<Attempt> Attempts { get; set; }
         public DbSet<Log> Logs { get; set; }
-        
+        public DbSet<Notification> Notifications { get; set; }        
     }
     
 }

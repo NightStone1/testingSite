@@ -10,8 +10,12 @@ public class TestCategory
     public string Name { get; set; }
 
     public int DisciplineId { get; set; }
+    
     public Discipline Discipline { get; set; }
 
     public ICollection<Test>? Tests { get; set; }
+
     public ICollection<GroupAssignment>? GroupAssignments { get; set; }
+
+    public bool IsDeleted { get; set; } = false; 
 }

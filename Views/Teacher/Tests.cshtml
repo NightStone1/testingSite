@@ -1,0 +1,93 @@
+@{
+    ViewData["Title"] = "Тесты";
+    Layout = "~/Views/Shared/_LayoutMain.cshtml";
+}
+@model List<testingSite.Models.TestCategory>
+<h3>Тесты</h3>
+<div class="container; border shadow-sm p-3 mb-4">
+    <div class="top-bar">
+        <button type="button" class="add-button" id="addTestCategoryBtn">Добавить категорию теста</button>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th>Тесты</th>
+                <th>Действия</th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var category in Model)
+            {
+                <tr class="category-row">
+                    <td> Категория: @category.Name</td>
+                    <td class="actions">
+                        <button type="button" class="add-button" id="addTestBtn">Добавить тест</button>
+                    @* <form asp-action="EditTest" method="get" style="display:inline;"> *@
+                        <input type="hidden" name="id" value="@category.Id" />
+                        <button class="edit-btn">Редактировать</button>
+                    @* </form> *@
+                    @* <form asp-action="DeleteTest" method="post" style="display:inline;"> *@
+                        <input type="hidden" name="id" value="@category.Id" />
+                        <button class="delete-btn">Удалить</button>
+                    @* </form> *@
+                    </td>
+                </tr>
+                @if(category.Tests != null && category.Tests.Any())
+                {
+                    foreach (var test in category.Tests)
+                    {
+                        <tr>
+                            <td>@test.Name</td>
+                            <td class="actions">
+                                @* <form asp-action="EditTest" method="get" style="display:inline;"> *@
+                                    <input type="hidden" name="id" value="@test.Id" />
+                                    <button class="edit-btn">Редактировать</button>
+                                @* </form> *@
+                                @* <form asp-action="DeleteTest" method="post" style="display:inline;"> *@
+                                    <input type="hidden" name="id" value="@test.Id" />
+                                    <button class="delete-btn">Удалить</button>
+                                @* </form> *@
+                            </td>
+                        </tr>
+                    }
+                }
+                else
+                {
+                    <tr>
+                        <td colspan="2"><em>Нет тестов в этой категории</em></td>
+                    </tr>
+                }
+            }                
+        </tbody>
+    </table>
+</div>
+@section Scripts {
+    <script>
+        const overlayBackdrop = document.getElementById("overlayBackdrop");
+        const overlayContent = overlayBackdrop.querySelector(".overlay-content");
+        document.getElementById("addTestCategoryBtn").addEventListener("click", function () 
+        {
+            fetch('/Teacher/CreateTestCategory').then(response => response.text()).then(html => 
+            {
+                overlayContent.innerHTML = html;
+                overlayBackdrop.classList.add("active");
+            });
+        });
+        document.getElementById("addTestBtn").addEventListener("click", function () 
+        {
+            fetch('/Teacher/CreateTest').then(response => response.text()).then(html => 
+            {
+                overlayContent.innerHTML = html;
+                overlayBackdrop.classList.add("active");
+            });
+        });
+        overlayBackdrop.addEventListener("click", function () 
+        {
+            overlayBackdrop.classList.remove("active");
+            setTimeout(() => 
+            {
+                overlayContent.innerHTML = "";
+            }, 300);
+        });
+    </script>
+}

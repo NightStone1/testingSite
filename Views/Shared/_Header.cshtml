@@ -1,0 +1,46 @@
+<header class="bg-white border-bottom shadow-sm p-3 mb-4">
+    <nav class="navbar navbar-expand">
+        <div class="container-fluid">
+            @{
+                string role = null;
+                if (User.Identity.IsAuthenticated)
+                {
+                    role = User.FindFirst(System.Security.Claims.ClaimTypes.Role)?.Value;
+                }
+
+                string controller = role switch
+                {
+                    "admin" => "Admin",
+                    "student" => "Student",
+                    "teacher" => "Teacher",
+                    _ => "User"
+                };
+            }
+
+            <a class="navbar-brand" asp-controller="@controller" asp-action="Dashboard">testingSite</a>
+
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarContent"
+                    aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+
+            <div class="collapse navbar-collapse" id="navbarContent">
+                <ul class="header ms-auto">
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                        <li>
+                            <a class="nav-link" @*  asp-controller="User" asp-action="Notifications"*@ >Уведомления (WIP)</a> 
+                            <a class="nav-link" asp-controller="User" asp-action="Logout">Выйти</a>
+                        </li>
+                    }
+                    else
+                    {
+                        @* <li>
+                            <a class="nav-link" asp-controller="User" asp-action="Auth">Войти</a>
+                        </li> *@
+                    }
+                </ul>
+            </div>
+        </div>
+    </nav>
+</header>
