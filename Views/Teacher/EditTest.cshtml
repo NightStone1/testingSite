@@ -1,0 +1,38 @@
+@model Test
+<div class="mt-2" style="width: 100%">
+    <div class="p-5" style="width: 100%">
+        <section id="testInfoSection">
+            <form id="OverlayForm">
+                <input type="hidden" name="Id" value="@Model.Id" />
+                <div class="mb-3">
+                    <label for="Name" class="form-label">Название теста</label>
+                    <input type="text" id="Name" name="Name" value="@Model.Name" class="form-control" required/>
+                </div>
+                <div class="mb-3">
+                    <label for="description" class="form-label">Описание</label>
+                    <textarea id="description" name="description" class="form-control" rows="4" maxlength="512">@Model.Description</textarea>
+                </div>
+            </form>
+        </section>
+        <section id="testQuestionsSection" style="display: none;">
+            <div class="mb-3">            
+                <div class="border-top shadow-sm pt-3 mt-4 rounded" id="questionsList">
+                    <div class="top-bar">
+                        <button type="button" class="add-question-btn" id="addQuestionBtn">Добавить вопрос</button>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Вопросы</th>
+                                <th>Действия</th>
+                            </tr>
+                        </thead>
+                        <tbody id="questionTableBody">
+                            @Html.Partial("_QuestionTableBody", Model)
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </section>
+    </div>
+</div>

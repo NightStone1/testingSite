@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace testingSite.Models;
 
-public class UserAnswer
+public class UserAnswer : ISoftDeletable
 {
     public int Id { get; set; }
 

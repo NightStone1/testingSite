@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace testingSite.Models;
 
-public class Notification
+public class Notification : ISoftDeletable
 {
     public int Id { get; set; }
 

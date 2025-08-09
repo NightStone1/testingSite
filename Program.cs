@@ -4,7 +4,7 @@ using Microsoft.EntityFrameworkCore;
 
 
 var builder = WebApplication.CreateBuilder(args);
-
+builder.Services.AddScoped<IAppLogger, AppLogger>();
 // Add services to the container.
 builder.Services.AddSession();
 builder.Services.AddHttpContextAccessor();

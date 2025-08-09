@@ -1,30 +1,17 @@
-@* @{
-    ViewData["Title"] = "Создание теста";
-    Layout = "~/Views/Shared/_LayoutMain.cshtml";
-} *@
-<div class="top-bar">
-    <button class="add-button">Добавить вопрос</button>
+<div class="mt-2"style="width: 100%">
+    <div class="p-5" style="width: 100%">
+        <form id="OverlayForm">
+            <input type="hidden" name="categoryId" /> 
+            <input type="hidden" name="categoryName" /> 
+            <div class="mb-3">
+                <label for="name">Название теста:</label>
+                <input type="text" class="form-control" id="name" name="name" required />
+            </div>
+            <div class="mb-3">
+                <label for="description">Описание теста:</label>
+                <textarea id="description" name="description" class="form-control" rows="4"  maxlength="512"></textarea>
+            </div>
+        </form>
+    </div>
 </div>
-<table>
-    <thead>
-        <tr>
-            <th style="width: 500px;">Вопрос</th>
-            <th>Действия</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>Что такое HTML?</td>
-            <td class="actions">
-                <button class="edit-btn">Редактировать</button>
-                <button class="delete-btn">Удалить</button>
-            </td>
-        </tr>
-        <tr>
-            <td>Как работает CSS?</td>
-            <td class="actions">
-                <button class="edit-btn">Редактировать</button>
-                <button class="delete-btn">Удалить</button>
-            </td>
-    </tbody>
-</table>
+

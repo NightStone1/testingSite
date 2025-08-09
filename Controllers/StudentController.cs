@@ -9,6 +9,16 @@ namespace testingSite.Controllers;
 [Authorize(Roles = "student")]
 public class StudentController : Controller
 {
+    private readonly IAppLogger _logger;
+
+    private readonly AppDbContext _context;
+
+    public StudentController(AppDbContext context, IAppLogger logger)
+    {
+        _context = context;
+        _logger = logger;
+    }
+
     public IActionResult Dashboard()
     {
         return View();

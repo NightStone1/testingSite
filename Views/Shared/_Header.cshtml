@@ -1,4 +1,4 @@
-<header class="bg-white border-bottom shadow-sm p-3 mb-4">
+<header class="bg-white border-bottom shadow-sm p-3 mb-4 rounded">
     <nav class="navbar navbar-expand">
         <div class="container-fluid">
             @{
@@ -23,13 +23,14 @@
                     aria-controls="navbarContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-
             <div class="collapse navbar-collapse" id="navbarContent">
                 <ul class="header ms-auto">
                     @if (User.Identity.IsAuthenticated)
                     {
                         <li>
                             <a class="nav-link" @*  asp-controller="User" asp-action="Notifications"*@ >Уведомления (WIP)</a> 
+                        </li>
+                        <li>
                             <a class="nav-link" asp-controller="User" asp-action="Logout">Выйти</a>
                         </li>
                     }

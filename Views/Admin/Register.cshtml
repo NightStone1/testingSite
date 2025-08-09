@@ -1,6 +1,6 @@
 @{
     ViewData["Title"] = "Регистрация";
-    Layout = "~/Views/Shared/_LayoutMain.cshtml";
+    Layout = "_LayoutLogin";
 }
 <h2>Регистрация пользователя</h2>
 <form asp-action="Register" method="post">
@@ -20,7 +20,7 @@
             <option value="student">Student</option>
         </select>
     </div>
-    <button type="submit">Создать пользователя</button>
+    <button class="btn" type="submit">Создать пользователя</button>
 </form>
 @if (ViewBag.Error != null)
 {

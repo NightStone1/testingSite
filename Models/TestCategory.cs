@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace testingSite.Models;
 
-public class TestCategory
+public class TestCategory : ISoftDeletable
 {
     public int Id { get; set; }
 
@@ -10,6 +10,8 @@ public class TestCategory
     public string Name { get; set; }
 
     public int DisciplineId { get; set; }
+    
+    public DateTime CreatedDate { get; set; } = DateTime.Now;
     
     public Discipline Discipline { get; set; }
 

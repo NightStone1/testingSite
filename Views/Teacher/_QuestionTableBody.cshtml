@@ -1,0 +1,37 @@
+@model Test
+@if(Model.Questions!= null && Model.Questions.Any())
+{
+    @foreach (var question in Model.Questions)
+    {
+        <tr class="question-row">
+            <td class="question-cell" data-question-id="@question.Id">@question.QuestionText</td>
+            <td class="actions">
+                <button class="delete-btn" data-question-id="@question.Id">Удалить</button>
+            </td>
+        </tr>
+        @if(question.Answers != null && question.Answers.Any())
+        {
+            foreach (var answer in question.Answers)
+            {
+                <tr class="answer-row">
+                    <td class="answer-cell" data-answer-id="@answer.Id">@answer.AnswerText</td>
+                    <td class="actions">
+                        <button class="delete-btn" data-answer-id="@answer.Id">Удалить</button>
+                    </td>
+                </tr>
+            }
+        }
+        else
+        {
+            <tr class="answer-row">
+                <td colspan="3"><em>Нет ответов в этом вопросе</em></td>
+            </tr>
+        }
+    }
+}
+else
+{
+    <tr class="category-row">
+        <td colspan="3"><em>Нет вопросов</em></td>
+    </tr>
+}

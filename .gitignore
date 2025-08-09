@@ -24,7 +24,7 @@ bld/
 *.ndf
 
 # SQLite database files
-*.db
+#*.db
 
 # Rider
 .idea/
@@ -38,4 +38,4 @@ bld/
 .env.*
 
 # Ignore local database folder
-/ignoreIT/
+#/Database/

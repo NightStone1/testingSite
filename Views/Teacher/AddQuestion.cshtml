@@ -1,0 +1,15 @@
+@{
+    var testId = (int)(ViewBag.TestId ?? 0);
+}
+<div class="container mt-2" style="width: 100%">
+    <div class="p-1 rounded" style="width: 100%">
+        <form id="questionOverlayForm">
+            <input type="hidden" name="testId" value="@testId" />
+            <div class="mb-3">
+                <label for="questionText" class="form-label">Текст вопроса</label>
+                <textarea id="questionText" name="questionText" class="form-control" rows="4" maxlength="1024" required></textarea>
+            </div>
+        </form>
+    </div>
+</div>
+

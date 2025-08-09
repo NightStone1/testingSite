@@ -1,0 +1,13 @@
+@model TestCategory
+<div class="mt-2" style="width: 100%">
+    <div class="p-5" style="width: 100%">
+        <form id="OverlayForm">
+            <input type="hidden" name="Id" value="@Model.Id" />
+            <div class="mb-3">
+                <label for="Name" class="form-label">Название категории</label>
+                <input type="text" id="Name" name="Name" value="@Model.Name" class="form-control" required/>
+            </div>
+        </form>
+    </div>
+</div>
+

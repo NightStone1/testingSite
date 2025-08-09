@@ -2,7 +2,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace testingSite.Models;
 
-public class Group
+public class Group : ISoftDeletable
 {
     public int Id { get; set; }
 

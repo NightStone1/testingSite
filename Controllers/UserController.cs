@@ -9,14 +9,19 @@ using testingSite.Data;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+
 namespace testingSite.Controllers;
+
 public class UserController : Controller
 {
+
     private readonly AppDbContext _context;
+
     public UserController(AppDbContext context)
     {
         _context = context;
     }
+
     public IActionResult Auth(string returnUrl = null)
     {
         if (User.Identity?.IsAuthenticated == true)
@@ -33,6 +38,7 @@ public class UserController : Controller
         ViewBag.ReturnUrl = returnUrl;
         return View();
     }
+
     [HttpPost]
     public async Task<IActionResult> Auth(string username, string password, string returnUrl = null)
     {
@@ -41,6 +47,7 @@ public class UserController : Controller
         {
             var claims = new List<Claim>
             {
+                new Claim(ClaimTypes.NameIdentifier, user.Id.ToString()),
                 new Claim(ClaimTypes.Name, user.Username),
                 new Claim(ClaimTypes.Role, user.Role.ToLower())
             };
@@ -64,6 +71,7 @@ public class UserController : Controller
         ViewBag.ReturnUrl = returnUrl;
         return View();
     }
+
     public IActionResult Dashboard()
     {
         var role = User.FindFirst(ClaimTypes.Role)?.Value?.ToLower();
@@ -77,15 +85,12 @@ public class UserController : Controller
         };
     }
 
-
-
- public IActionResult Logout()
+    public async Task<IActionResult> Logout()
     {
         HttpContext.Session.Clear();
-        HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
         return RedirectToAction("Auth");
     }
-
 
     public IActionResult AccessDenied()
     {

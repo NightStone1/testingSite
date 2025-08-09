@@ -1,32 +1,22 @@
-@* @{
-    ViewData["Title"] = "Создание теста";
-    Layout = "~/Views/Shared/_LayoutMain.cshtml";
-} *@
-<div class="container">
-    <div class="top-bar">
-        <button class="add-button">Добавить вопрос</button>
+@model List<testingSite.Models.Discipline>
+<div class="mt-2" style="width: 100%">
+    <div class="p-5" style="width: 100%">
+        <form id="OverlayForm">
+            <div class="mb-3">
+                <label for="name" class="form-label">Название категории:</label>
+                <input type="text" class="form-control" id="name" name="name" required />
+            </div>
+            <div class="mb-3">
+                <label for="discipline" class="form-label">Дисциплина категории:</label>
+                <select id="discipline" name="disciplineId" class="form-control" required onchange="updateDisciplineName()">
+                    <option value="">---</option>                    
+                    @foreach (var discipline in Model)
+                    {                    
+                        <option value="@discipline.Id">@discipline.Name</option>
+                    }
+                </select>
+            </div>
+        </form>
     </div>
-    <table>
-        <thead>
-            <tr>
-                <th style="width: 500px;">Вопрос</th>
-                <th>Действия</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>Что такое HTML?</td>
-                <td class="actions">
-                    <button class="edit-btn">Редактировать</button>
-                    <button class="delete-btn">Удалить</button>
-                </td>
-            </tr>
-            <tr>
-                <td>Как работает CSS?</td>
-                <td class="actions">
-                    <button class="edit-btn">Редактировать</button>
-                    <button class="delete-btn">Удалить</button>
-                </td>
-        </tbody>
-    </table>
 </div>
+

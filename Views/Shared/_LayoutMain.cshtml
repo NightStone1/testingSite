@@ -29,7 +29,7 @@
 <body>
     <partial name="_Header" />
     <main style="display: flex;">
-        <div class="border shadow-sm p-3 m-4 rounded" style="flex: 1;  background-color: #eee;">
+        <div class="border shadow-sm p-3 m-4 rounded" style="flex: 1; max-height: 300px;  background-color: #eee;">
             @if (!string.IsNullOrEmpty(sidebarPartial))
             {
                 @await Html.PartialAsync(sidebarPartial)
@@ -42,11 +42,32 @@
     <partial name="_Footer"/>
     <div id="overlayBackdrop" class="overlay-backdrop">
         <div class="overlay-content" onclick="event.stopPropagation()">
+            <div class="overlay-header">
+                <h4 id="overlay-title">Добавить</h4>
+            </div>
+            <div class="overlay-body">
+
+            </div>
+            <div class="overlay-footer; border-top shadow-sm pt-3 mt-4 rounded">
+                <button type="button" class="btn" onclick="closeOverlay()">Отмена</button>
+                <button type="button" class="btn" onclick="submitCategoryForm()">Сохранить</button>
+            </div>
         </div>
     </div>
-    @section Scripts {
-        @RenderSection("Scripts", required: false)
-    }
+    <div id="questionoverlayBackdrop" class="question-overlay-backdrop">
+        <div class="question-overlay-content" onclick="event.stopPropagation()">
+            <div class="question-overlay-header">
+                <h4 id="question-overlay-title">Добавить</h4>
+            </div>
+            <div class="question-overlay-body">
+
+            </div>
+            <div class="question-overlay-footer; border-top shadow-sm pt-3 mt-4 rounded">
+                <button type="button" class="btn" onclick="questioncloseOverlay()">Отмена</button>
+                <button type="button" class="btn" onclick="submitQuestionForm()">Сохранить</button>
+            </div>
+        </div>
+    </div>
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>

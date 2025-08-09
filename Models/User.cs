@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace testingSite.Models;
 
-public class User
+public class User : ISoftDeletable
 {
     public int Id { get; set; }
 
