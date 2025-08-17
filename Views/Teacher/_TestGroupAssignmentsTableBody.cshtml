@@ -4,9 +4,9 @@
     @foreach (var ga in Model)
     {
         <tr class="group-row" data-ga-id="@ga.GroupAssignmentId">
-            <td data-group-id="@ga.GroupId">@ga.GroupName</td>
-            <td data-test-id="@ga.TestId">@ga.TestName</td>
+            <td data-group-id="@ga.GroupId">@ga.GroupName</td>            
             <td data-testCategory-id="@ga.TestCategoryId">@ga.TestCategory</td>
+            <td data-test-id="@ga.TestId">@ga.TestName</td>
             <td>@(ga.MaxAttempts != null ? ga.MaxAttempts.ToString() : "—")</td>
             <td>@(ga.AssignedDate.ToString("dd.MM.yyyy"))</td>
             <td></td>
