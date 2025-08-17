@@ -1,0 +1,23 @@
+@model List<AssignmentRowViewModel>
+@if(Model!= null)
+{
+    @foreach (var a in Model)
+    {
+        <tr class="assignment-row" data-ga-id="@a.AssignmentId">
+            <td data-group-id="@a.GroupId">@a.GroupName</td>
+            <td data-user-id="@a.UserId">@a.UserName</td>
+            <td data-test-id="@a.TestId">@a.TestName</td>
+            <td data-testCategory-id="@a.TestCategoryId">@a.TestCategory</td>
+            <td>@(a.IsCompleted ? "Да" : "Нет")</td>                                
+            <td>@(a.MaxAttempts == null ? a.AttemptsCount.ToString() : $"{a.AttemptsCount} из {a.MaxAttempts}")</td>
+            <td>@a.AssignedDate.ToString("dd.MM.yyyy")</td>
+            <td></td>
+        </tr>
+    }
+}
+else
+{
+    <tr class="assignment-row">
+        <td colspan="3"><em>Нет назначений</em></td>
+    </tr>
+}

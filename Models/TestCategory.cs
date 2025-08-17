@@ -10,14 +10,12 @@ public class TestCategory : ISoftDeletable
     public string Name { get; set; }
 
     public int DisciplineId { get; set; }
-    
-    public DateTime CreatedDate { get; set; } = DateTime.Now;
-    
     public Discipline Discipline { get; set; }
 
-    public ICollection<Test>? Tests { get; set; }
+    public DateTime CreatedDate { get; set; } = DateTime.Now;
 
-    public ICollection<GroupAssignment>? GroupAssignments { get; set; }
+    public ICollection<Test> Tests { get; set; } = new List<Test>();
 
     public bool IsDeleted { get; set; } = false; 
 }
+

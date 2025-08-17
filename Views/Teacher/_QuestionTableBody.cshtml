@@ -6,7 +6,7 @@
         <tr class="question-row">
             <td class="question-cell" data-question-id="@question.Id">@question.QuestionText</td>
             <td class="actions">
-                <button class="delete-btn" data-question-id="@question.Id">Удалить</button>
+                <button type="button" class="delete-question-btn" data-question-id="@question.Id">Удалить</button>
             </td>
         </tr>
         @if(question.Answers != null && question.Answers.Any())
@@ -16,7 +16,7 @@
                 <tr class="answer-row">
                     <td class="answer-cell" data-answer-id="@answer.Id">@answer.AnswerText</td>
                     <td class="actions">
-                        <button class="delete-btn" data-answer-id="@answer.Id">Удалить</button>
+                        @* <button class="delete-btn" data-answer-id="@answer.Id">Удалить</button> *@
                     </td>
                 </tr>
             }

@@ -9,6 +9,19 @@
                 <label for="questionText" class="form-label">Текст вопроса</label>
                 <textarea id="questionText" name="questionText" class="form-control" rows="4" maxlength="1024" required></textarea>
             </div>
+            <button id="addAnswerBtn" type="button" class="add-button">Добавить ответ</button>
+            <table class="mb-3">
+                <thead>
+                    <tr>
+                        <th>Ответ</th>
+                        <th>Правильный</th>
+                        <th>Действие</th>
+                    </tr>
+                </thead>
+                    <tbody id="answersContainer">
+                        
+                    </tbody>
+            </table>            
         </form>
     </div>
 </div>

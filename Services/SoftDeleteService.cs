@@ -14,9 +14,9 @@ public class SoftDeleteService : ISoftDeleteService
     {
         var category = await _context.TestCategories
             .Include(tc => tc.Tests)
-            
+                .ThenInclude(t => t.Questions)
+                    .ThenInclude(q => q.Answers)
             .FirstOrDefaultAsync(tc => tc.Id == categoryId);
-
         if (category == null)
             return false;
 
@@ -25,7 +25,16 @@ public class SoftDeleteService : ISoftDeleteService
         foreach (var test in category.Tests)
         {
             test.IsDeleted = true;
+            foreach (var question in test.Questions)
+            {
+                question.IsDeleted = true;
+                foreach (var answer in question.Answers)
+                {
+                    answer.IsDeleted = true;
+                }
+            }
         }
+
 
         await _context.SaveChangesAsync();
         return true;
@@ -34,12 +43,41 @@ public class SoftDeleteService : ISoftDeleteService
     public async Task<bool> SoftDeleteTestAsync(int testId)
     {
         var test = await _context.Tests
+            .Include(t => t.Questions)
+                .ThenInclude(q => q.Answers)
             .FirstOrDefaultAsync(t => t.Id == testId);
 
         if (test == null)
             return false;
 
         test.IsDeleted = true;
+        foreach (var question in test.Questions)
+        {
+            question.IsDeleted = true;
+            foreach (var answer in question.Answers)
+            {
+                answer.IsDeleted = true;
+            }
+        }
+
+        await _context.SaveChangesAsync();
+        return true;
+    }
+
+    public async Task<bool> SoftDeleteQuestionAsync(int QuestionId)
+    {
+        var question = await _context.Questions
+            .Include(q => q.Answers)
+            .FirstOrDefaultAsync(q => q.Id == QuestionId);
+
+        if (question == null)
+            return false;
+
+        question.IsDeleted = true;
+        foreach (var answer in question.Answers)
+        {
+            answer.IsDeleted = true;
+        }
 
         await _context.SaveChangesAsync();
         return true;

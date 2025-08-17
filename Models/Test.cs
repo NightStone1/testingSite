@@ -13,10 +13,13 @@ public class Test : ISoftDeletable
     public string Name { get; set; }
 
     public string? Description { get; set; }
-
     public DateTime CreatedDate { get; set; } = DateTime.Now;
 
-    public ICollection<Question>? Questions { get; set; }
+    // Вопросы
+    public ICollection<Question> Questions { get; set; } = new List<Question>();
+
+    // Групповые назначения
+    public ICollection<GroupAssignment> GroupAssignments { get; set; } = new List<GroupAssignment>();
 
     public bool IsDeleted { get; set; } = false; 
 }

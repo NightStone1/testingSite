@@ -154,6 +154,33 @@ footer {
   border-radius: 4px;
 }
 
+.assignment-top-bar {
+  display: grid;
+  grid-template-columns: repeat(6, minmax(140px, 1fr));
+  gap: 12px 16px;
+  align-items: end;
+}
+
+@media (max-width: 1200px) {
+  .assignment-top-bar {
+    grid-template-columns: repeat(3, minmax(140px, 1fr));
+  }
+}
+
+@media (max-width: 640px) {
+  .assignment-top-bar {
+    grid-template-columns: 1fr;
+  }
+}
+
+.assignment-top-bar {
+  display: flex;
+  justify-content: flex-start;
+  align-items: center;
+  margin-bottom: 20px;
+  border-radius: 4px;
+}
+
 table {
   width: 100%;
   border-collapse: collapse;
@@ -197,6 +224,35 @@ th {
 .question-row:hover {
   background-color: #ddd;
 }
+
+.assignment-row {
+  background-color: #f9f9f9;
+}
+
+.assignment-row:hover {
+  background-color: #eef;
+}
+
+.inner-table {
+  width: 100%;
+  border-collapse: collapse;
+}
+.inner-table th, .inner-table td {
+  border: 1px solid #ccc;
+  padding: 4px 8px;
+}
+.group-row {
+  cursor: pointer;
+  background-color: #f9f9f9;
+}
+.group-row:hover {
+  background-color: #eef;
+}
+.assignment-subrow td {
+  padding: 0;
+  background-color: #fff;
+}
+
 .answer-row {
   background-color: #d8feff;
   font-size: 16px;
@@ -209,7 +265,7 @@ th {
   cursor: pointer;
 }
 
-.add-button, .add-test-btn, .add-question-btn {
+.add-button, .add-test-btn, .add-question-btn, .add-testassignment-btn {
   background-color: #b5e8b5;
   padding: 10px 18px;
   border: none;
@@ -218,7 +274,7 @@ th {
   cursor: pointer;
 }
 
-.add-button:hover, .add-test-btn:hover, .add-question-btn:hover {
+.add-button:hover, .add-test-btn:hover, .add-question-btn:hover, .add-testassignment-btn:hover {
   background-color: #9fd69f;
 }
 
@@ -252,11 +308,16 @@ th {
   background-color: #e8e89f ;
 }
 
-.delete-btn {
+.delete-btn, .delete-test-btn, .delete-category-btn, .delete-question-btn {
+  padding: 10px 18px;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  cursor: pointer;
   background-color: #ffb5b5 ;
 }
 
-.delete-btn:hover {
+.delete-btn:hover, .delete-test-btn:hover, .delete-category-btn:hover, .delete-question-btn:hover {
   background-color: #ff9f9f ;
 }
 h1 {
@@ -344,12 +405,6 @@ h1 {
   float: right;
 }
 
-
-
-
-
-
-
 .question-overlay-backdrop {
   position: fixed;
   top: 0;
@@ -378,7 +433,7 @@ h1 {
   box-shadow: 0 .5rem 1rem rgba(0, 0, 0, 0.3);
   max-width: 720px;
   width: 90vw;
-  max-height: 85vh;
+  /* max-height: 85vh; */
   box-sizing: border-box;
   text-align: center;
 }

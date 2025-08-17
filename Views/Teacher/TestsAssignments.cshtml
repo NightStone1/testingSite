@@ -2,5 +2,100 @@
     ViewData["Title"] = "Назначение тестов";
     Layout = "~/Views/Shared/_LayoutMain.cshtml";
 }
+@model testingSite.Models.AssignmentViewModel
 <h3>Назначение тестов</h3>
-<p>WIP (Work In Progress)</p>
+<div class="border shadow-sm p-3 mb-4">
+    <form id="assignmentForm">
+        <div class="assignment-top-bar">
+            <div>
+                <label for="assignmentType" class="form-label">Дисциплина категории:</label>
+                <select id="assignmentType" name="assignmentType" class="form-control" required>
+                    <option value="">---</option>                    
+                    <option value="group">Групповое назначение</option>
+                    <option value="single">Одиночное назначение</option>
+                </select>
+            </div>
+            <div>
+                <label for="groupSelect" class="form-label">Группа:</label>
+                <select id="groupSelect" name="groupSelect" class="form-control" required>
+                    <option value="">---</option>
+                    @foreach (var group in Model.Groups)
+                    {
+                        <option value="@group.Id">@group.Name</option>
+                    }
+                </select>
+            </div>
+            <div>
+                <label for="studentSelect" class="form-label">Студент:</label>
+                <select id="studentSelect" name="studentSelect" class="form-control" required disabled>
+                    <option value="">---</option>
+                    @foreach (var user in Model.Users)
+                    {
+                        <option value="@user.Id">@user.Username</option>
+                    }
+                </select>
+            </div>
+            <div>
+                <label for="testCategory" class="form-label">Тестовая категория:</label>
+                <select id="testCategory" name="testCategory" class="form-control" required>
+                    <option value="">---</option>
+                    @foreach (var testCategory in Model.TestCategories)
+                    {
+                        <option value="@testCategory.Id">@testCategory.Name</option>
+                    }
+                </select>
+            </div>
+            <div>
+                <label for="test" class="form-label">Тест:</label>
+                <select id="test" name="test" class="form-control" required>
+                    <option value="">---</option>
+                    @foreach (var test in Model.Tests)
+                    {
+                        <option value="@test.Id">@test.Name</option>
+                    }
+                </select>
+            </div>
+            <div>
+                <label for="countAttempts" class="form-label">Количество попыток:</label>
+                <input type="number" id="countAttempts" name="countAttempts" class="form-control" min="0" max="10" step="1" inputmode="numeric" pattern="\d*" maxlength="2" placeholder="0–10">
+            </div>
+        </div>
+        <div class="top-bar">
+            <button type="Submit" class="add-testassignment-btn" id="addTestAssignmentBtn">Добавить назначение</button>
+        </div>
+    </form>
+    <h4>Групповые назначения</h4>
+    <table>
+        <thead>
+            <tr>
+                <th>Группа</th>
+                <th>Тестовая категория</th>
+                <th>Тест</th>
+                <th>Макс. попытки</th>
+                <th>Дата назначения</th>
+                <th>Действия</th>
+            </tr>
+        </thead>
+        <tbody id="testGroupAssignmentsTableBody">
+            @Html.Partial("_TestGroupAssignmentsTableBody", Model.GroupAssignments)
+        </tbody>
+    </table>
+    <h4>Одиночные назначения</h4>
+    <table>
+        <thead>
+            <tr>
+                <th>Группа</th>
+                <th>Студент</th>
+                <th>Тестовая категория</th>
+                <th>Тест</th>
+                <th>Выполнено</th>
+                <th>Попытки</th>
+                <th>Дата назначения</th>
+                <th>Действия</th>
+            </tr>
+        </thead>
+        <tbody id="testSingleAssignmentsTableBody">
+            @Html.Partial("_TestSingleAssignmentsTableBody", Model.Assignments)
+        </tbody>
+    </table>
+</div>

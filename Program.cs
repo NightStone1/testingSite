@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore;
 
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddScoped<IAppLogger, AppLogger>();
+builder.Services.AddScoped<ISoftDeleteService, SoftDeleteService>();
 // Add services to the container.
 builder.Services.AddSession();
 builder.Services.AddHttpContextAccessor();

@@ -15,10 +15,13 @@ public class TeacherController : Controller
 
     private readonly AppDbContext _context;
 
-    public TeacherController(AppDbContext context, IAppLogger logger)
+    private readonly ISoftDeleteService _softDeleteService;
+
+    public TeacherController(AppDbContext context, IAppLogger logger, ISoftDeleteService softDeleteService)
     {
         _context = context;
         _logger = logger;
+        _softDeleteService = softDeleteService;
     }
 
     public IActionResult Dashboard()
@@ -31,9 +34,40 @@ public class TeacherController : Controller
         return PartialView("Lectures");
     }
 
-    public IActionResult Questions()
+    [HttpPost]
+    public async Task<IActionResult> DeleteCategory(int id)
     {
-        return PartialView("Questions");
+        var success = await _softDeleteService.SoftDeleteCategoryAsync(id);
+
+        if (!success)
+            return NotFound();
+
+        TempData["Message"] = "Категория удалена (soft delete).";
+        return Ok();
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> DeleteQuestion(int id)
+    {
+        var success = await _softDeleteService.SoftDeleteQuestionAsync(id);
+
+        if (!success)
+            return NotFound();
+
+        TempData["Message"] = "Вопрос удален (soft delete).";
+        return Ok();
+    }
+
+    [HttpPost]
+    public async Task<IActionResult> DeleteTest(int id)
+    {
+        var success = await _softDeleteService.SoftDeleteTestAsync(id);
+
+        if (!success)
+            return NotFound();
+
+        TempData["Message"] = "Тест удалён (soft delete).";
+        return Ok();
     }
 
     public IActionResult Tests()
@@ -183,6 +217,47 @@ public class TeacherController : Controller
         return PartialView("_QuestionTableBody", test);
     }
 
+    public async Task<IActionResult> GetSingleAssignmentsTable()
+    {
+        return PartialView("_TestSingleAssignmentsTableBody", SingleAssignmentRowViewModel());
+    }
+
+        public async Task<IActionResult> GetGroupAssignmentsTable()
+    {
+        return PartialView("_TestGroupAssignmentsTableBody", GroupAssignmentRowViewModel());
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetStudentsByGroup(int groupId)
+    {
+        var students = await _context.Users
+            .Where(u => u.GroupId == groupId)
+            .Select(u => new 
+            {
+                id = u.Id,
+                name = u.Username
+            })
+            .ToListAsync();
+
+        return Json(students);
+    }
+
+    [HttpGet]
+    public async Task<IActionResult> GetTestsByCategories(int categoryId)
+    {
+        var tests = await _context.Tests
+            .Where(u => u.TestCategoryId == categoryId)
+            .Select(u => new 
+            {
+                id = u.Id,
+                name = u.Name
+            })
+            .ToListAsync();
+
+        return Json(tests);
+    }
+
+
 
     public IActionResult CreateTest()
     {
@@ -227,10 +302,147 @@ public class TeacherController : Controller
         return PartialView("LecturesAssignments");
     }
 
+    public List<GroupAssignmentRowViewModel> GroupAssignmentRowViewModel()
+    {
+        var groupAssignments = _context.GroupAssignments
+            .Include(ga => ga.Group)
+            .Include(ga => ga.Test)
+                .ThenInclude(t => t.TestCategory)
+            .Include(ga => ga.Assignments) // <-- это лучше добавить, чтобы сразу подтянуть назначения
+                .ThenInclude(a => a.User) // <-- и юзеров, если будешь выводить
+            .Select(ga => new GroupAssignmentRowViewModel
+            {
+                GroupAssignmentId = ga.Id,
+                GroupId = ga.Group.Id,
+                GroupName = ga.Group.Name,
+                TestId = ga.Test.Id,
+                TestName = ga.Test.Name,
+                TestCategory = ga.Test.TestCategory.Name,
+                TestCategoryId = ga.Test.TestCategoryId,
+                AssignedDate = ga.AssignedDate,
+                MaxAttempts = ga.MaxAttempts,
+                Assignments = ga.Assignments
+                    .Where(a => !a.IsDeleted)
+                    .Select(a => new AssignmentRowViewModel
+                    {
+                        AssignmentId = a.Id,
+                        UserId = a.User.Id, // добавь, если будешь показывать студентов
+                        UserName = a.User.Username,
+                        IsCompleted = a.IsCompleted,
+                        AttemptsCount = a.Attempts.Count,
+                        AssignedDate = a.AssignedDate,
+                        MaxAttempts = a.MaxAttempts,
+                        GroupAssignmentId = a.GroupAssignmentId
+                    })
+                    .ToList()
+            })
+            .ToList();
+        return groupAssignments;
+    }
+
+    public List<AssignmentRowViewModel> SingleAssignmentRowViewModel()
+    {
+        var singleAssignments = _context.Assignments
+            .Where(a => !a.IsDeleted && a.GroupAssignmentId == null)
+            .Include(a => a.User).ThenInclude(u => u.Group)
+            .Include(a => a.Test).ThenInclude(t => t.TestCategory)
+            .Select(a => new AssignmentRowViewModel
+            {
+                AssignmentId = a.Id,
+                GroupId = a.User.Group.Id,
+                GroupName = a.User.Group.Name,
+                UserId = a.User.Id,
+                UserName = a.User.Username,
+                TestId = a.Test.Id,
+                TestName = a.Test.Name,
+                TestCategory = a.Test.TestCategory.Name,
+                TestCategoryId = a.Test.TestCategoryId,
+                IsCompleted = a.IsCompleted,
+                AttemptsCount = a.Attempts.Count,
+                AssignedDate = a.AssignedDate,
+                MaxAttempts = a.MaxAttempts
+            })
+            .ToList();
+        return singleAssignments;
+    }
+    
     public IActionResult TestsAssignments()
     {
-        return PartialView("TestsAssignments");
+
+        var model = new AssignmentViewModel
+        {
+            Groups = _context.Groups.ToList(),
+            Users = _context.Users.ToList(),
+            TestCategories = _context.TestCategories.ToList(),
+            Tests = _context.Tests.ToList(),
+            Assignments = SingleAssignmentRowViewModel(),
+            GroupAssignments = GroupAssignmentRowViewModel()
+        };
+        return PartialView("TestsAssignments", model);
     }
+
+    [HttpPost]
+    public IActionResult TestsAssignments(string assignmentType, int groupSelect, int studentSelect, int testCategory, int test, int countAttempts)
+    {
+        var now = DateTime.Now;
+        if (assignmentType == "group")
+        {
+            if (studentSelect != 0)
+            {
+                return BadRequest("Выбирать студента при групповом назначении НЕЛЬЗЯ!");
+            }
+            var students = _context.Users
+                .Where(u => u.GroupId == groupSelect)
+                .ToList();
+            if (!students.Any())
+            {
+                return BadRequest("В группе нет студентов!");
+            }
+            var groupAssignment = new GroupAssignment
+            {
+                GroupId = groupSelect,
+                TestId = test,
+                MaxAttempts = countAttempts != 0 ? countAttempts : null,
+                AssignedDate = now
+            };
+            _context.GroupAssignments.Add(groupAssignment);
+            _context.SaveChanges();
+
+            foreach (var student in students)
+            {
+                var assignment = new Assignment
+                {
+                    UserId = student.Id,
+                    TestId = test,
+                    GroupAssignmentId = groupAssignment.Id, 
+                    MaxAttempts = countAttempts != 0 ? countAttempts : null,
+                    AssignedDate = now
+                };
+                _context.Assignments.Add(assignment);
+            }
+            _context.SaveChanges();
+            return Ok();
+        }
+        if (assignmentType == "single")
+        {
+            if (studentSelect == 0)
+            {
+                return BadRequest("Необходимо выбрать студента!");
+            }
+            var assignment = new Assignment
+            {
+                UserId = studentSelect,
+                TestId = test,
+                MaxAttempts = countAttempts != 0 ? countAttempts : null,
+                AssignedDate = now
+            };
+            _context.Assignments.Add(assignment);
+            _context.SaveChanges();
+            return Ok();
+        }
+        return BadRequest("Заполните все обязательные поля.");
+    }
+
     
     [HttpGet]
     public IActionResult Questions(int testId)
@@ -240,23 +452,33 @@ public class TeacherController : Controller
     }
 
     [HttpPost]
-    public IActionResult Questions(int testId, string questionText)
+    public IActionResult Questions(int testId, string questionText, List<string> answers, List<bool> isCorrect)
     {
-        if (string.IsNullOrWhiteSpace(questionText))
+        if (string.IsNullOrWhiteSpace(questionText) || answers == null || answers.Count == 0)
         {
-            return BadRequest("Текст вопроса обязателен");
+            return BadRequest("Заполните все обязательные поля.");
         }
         var testExists = _context.Tests.Any(t => t.Id == testId);
         if (!testExists)
         {
             return NotFound();
         }
-
-        _context.Questions.Add(new Question
+        var question = new Question
         {
             TestId = testId,
-            QuestionText = questionText
-        });
+            QuestionText = questionText,
+            Answers = answers.Select((ans, i) => new Answer
+            {
+                AnswerText = ans,
+                IsCorrect = isCorrect != null && i < isCorrect.Count && isCorrect[i]
+            }).ToList()
+        };
+        // _context.Questions.Add(new Question
+        // {
+        //     TestId = testId,
+        //     QuestionText = questionText
+        // });
+        _context.Questions.Add(question);
         _context.SaveChanges();
 
         _logger.Log(

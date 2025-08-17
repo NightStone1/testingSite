@@ -8,7 +8,7 @@
             <td> @category.Discipline.Name</td>
             <td class="actions">
                 <button type="button" class="add-test-btn" data-category-id="@category.Id">Добавить тест</button>
-                <button class="delete-btn" data-category-id="@category.Id">Удалить</button>
+                <button type="button" class="delete-category-btn" data-category-id="@category.Id">Удалить</button>
             </td>
         </tr>
         @if(category.Tests != null && category.Tests.Any())
@@ -18,7 +18,7 @@
                 <tr class="test-row">
                     <td colspan="2" class="test-cell" data-test-id="@test.Id">@test.Name</td>
                     <td class="actions">
-                        <button class="delete-btn" data-test-id="@test.Id">Удалить</button>
+                        <button type="button" class="delete-test-btn" data-test-id="@test.Id">Удалить</button>
                     </td>
                 </tr>
             }

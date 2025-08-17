@@ -1,0 +1,46 @@
+@model List<GroupAssignmentRowViewModel>
+@if(Model!= null)
+{
+    @foreach (var ga in Model)
+    {
+        <tr class="group-row" data-ga-id="@ga.GroupAssignmentId">
+            <td data-group-id="@ga.GroupId">@ga.GroupName</td>
+            <td data-test-id="@ga.TestId">@ga.TestName</td>
+            <td data-testCategory-id="@ga.TestCategoryId">@ga.TestCategory</td>
+            <td>@(ga.MaxAttempts != null ? ga.MaxAttempts.ToString() : "—")</td>
+            <td>@(ga.AssignedDate.ToString("dd.MM.yyyy"))</td>
+            <td></td>
+        </tr>
+        <tr class="assignment-subrow" style="display:none;">
+            <td colspan="4">
+                <table class="inner-table">
+                    <thead>
+                        <tr>
+                            <th>Студент</th>
+                            <th>Выполнено</th>
+                            <th>Попытки</th>
+                            <th>Дата назначения</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach (var a in ga.Assignments)
+                        {
+                            <tr>
+                                <td data-user-id="@a.UserId">@a.UserName</td>
+                                <td>@(a.IsCompleted ? "Да" : "Нет")</td>                                
+                                <td>@(a.MaxAttempts == null ? a.AttemptsCount.ToString() : $"{a.AttemptsCount} из {a.MaxAttempts}")</td>
+                                <td>@a.AssignedDate.ToString("dd.MM.yyyy")</td>
+                            </tr>
+                        }
+                    </tbody>
+                </table>
+            </td>
+        </tr>
+    }
+}
+else
+{
+    <tr class="assignment-row">
+        <td colspan="3"><em>Нет назначений</em></td>
+    </tr>
+}

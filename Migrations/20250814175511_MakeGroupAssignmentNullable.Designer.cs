@@ -2,6 +2,7 @@
 using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using testingSite.Data;
 
@@ -10,12 +11,14 @@ using testingSite.Data;
 namespace testingSite.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20250814175511_MakeGroupAssignmentNullable")]
+    partial class MakeGroupAssignmentNullable
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
-            modelBuilder.HasAnnotation("ProductVersion", "9.0.8");
+            modelBuilder.HasAnnotation("ProductVersion", "9.0.7");
 
             modelBuilder.Entity("testingSite.Models.Answer", b =>
                 {
@@ -49,9 +52,6 @@ namespace testingSite.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("INTEGER");
 
-                    b.Property<DateTime>("AssignedDate")
-                        .HasColumnType("TEXT");
-
                     b.Property<int?>("GroupAssignmentId")
                         .HasColumnType("INTEGER");
 
@@ -61,13 +61,7 @@ namespace testingSite.Migrations
                     b.Property<bool>("IsDeleted")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("LectureId")
-                        .HasColumnType("INTEGER");
-
                     b.Property<int?>("MaxAttempts")
-                        .HasColumnType("INTEGER");
-
-                    b.Property<int?>("TestId")
                         .HasColumnType("INTEGER");
 
                     b.Property<int>("UserId")
@@ -76,10 +70,6 @@ namespace testingSite.Migrations
                     b.HasKey("Id");
 
                     b.HasIndex("GroupAssignmentId");
-
-                    b.HasIndex("LectureId");
-
-                    b.HasIndex("TestId");
 
                     b.HasIndex("UserId");
 
@@ -177,7 +167,7 @@ namespace testingSite.Migrations
                     b.Property<int?>("MaxAttempts")
                         .HasColumnType("INTEGER");
 
-                    b.Property<int?>("TestId")
+                    b.Property<int?>("TestCategoryId")
                         .HasColumnType("INTEGER");
 
                     b.HasKey("Id");
@@ -186,7 +176,7 @@ namespace testingSite.Migrations
 
                     b.HasIndex("LectureId");
 
-                    b.HasIndex("TestId");
+                    b.HasIndex("TestCategoryId");
 
                     b.ToTable("GroupAssignments");
                 });
@@ -448,14 +438,6 @@ namespace testingSite.Migrations
                         .WithMany("Assignments")
                         .HasForeignKey("GroupAssignmentId");
 
-                    b.HasOne("testingSite.Models.Lecture", "Lecture")
-                        .WithMany()
-                        .HasForeignKey("LectureId");
-
-                    b.HasOne("testingSite.Models.Test", "Test")
-                        .WithMany()
-                        .HasForeignKey("TestId");
-
                     b.HasOne("testingSite.Models.User", "User")
                         .WithMany("Assignments")
                         .HasForeignKey("UserId")
@@ -463,10 +445,6 @@ namespace testingSite.Migrations
                         .IsRequired();
 
                     b.Navigation("GroupAssignment");
-
-                    b.Navigation("Lecture");
-
-                    b.Navigation("Test");
 
                     b.Navigation("User");
                 });
@@ -494,15 +472,15 @@ namespace testingSite.Migrations
                         .WithMany("GroupAssignments")
                         .HasForeignKey("LectureId");
 
-                    b.HasOne("testingSite.Models.Test", "Test")
+                    b.HasOne("testingSite.Models.TestCategory", "TestCategory")
                         .WithMany("GroupAssignments")
-                        .HasForeignKey("TestId");
+                        .HasForeignKey("TestCategoryId");
 
                     b.Navigation("Group");
 
                     b.Navigation("Lecture");
 
-                    b.Navigation("Test");
+                    b.Navigation("TestCategory");
                 });
 
             modelBuilder.Entity("testingSite.Models.Lecture", b =>
@@ -661,13 +639,13 @@ namespace testingSite.Migrations
 
             modelBuilder.Entity("testingSite.Models.Test", b =>
                 {
-                    b.Navigation("GroupAssignments");
-
                     b.Navigation("Questions");
                 });
 
             modelBuilder.Entity("testingSite.Models.TestCategory", b =>
                 {
+                    b.Navigation("GroupAssignments");
+
                     b.Navigation("Tests");
                 });
 

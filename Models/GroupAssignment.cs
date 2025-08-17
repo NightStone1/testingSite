@@ -6,23 +6,24 @@ public class GroupAssignment : ISoftDeletable
 {
     public int Id { get; set; }
 
+    // Группа
     public int GroupId { get; set; }
-    
-    public Group Group { get; set; }
+    public Group Group { get; set; } = null!;
 
-    public int? TestCategoryId { get; set; }
-
-    public TestCategory? TestCategory { get; set; }
+    // Тест или лекция (одно из двух)
+    public int? TestId { get; set; }
+    public Test? Test { get; set; }
 
     public int? LectureId { get; set; }
-
     public Lecture? Lecture { get; set; }
 
+    // Дата и ограничения
     public DateTime AssignedDate { get; set; } = DateTime.Now;
-
     public int? MaxAttempts { get; set; }
 
-    public ICollection<Assignment>? Assignments { get; set; }
+    // Связанные индивидуальные назначения
+    public ICollection<Assignment> Assignments { get; set; } = new List<Assignment>();
 
-    public bool IsDeleted { get; set; } = false; 
+    // Soft delete
+    public bool IsDeleted { get; set; } = false;
 }
