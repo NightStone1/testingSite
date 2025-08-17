@@ -39,3 +39,4 @@ bld/
 
 # Ignore local database folder
 #/Database/
+/Migrations/
