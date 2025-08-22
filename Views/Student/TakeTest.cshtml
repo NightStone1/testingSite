@@ -1,0 +1,40 @@
+@model testingSite.Models.DTOs.TestDto
+@{
+    ViewData["Title"] = $"Тест {Model.Title}";
+    Layout = "~/Views/Shared/_LayoutTest.cshtml";
+}
+<div class="test-details">
+    <div class="back-button">
+        <a asp-controller="Student" asp-action="Tests" class="btn">← Назад</a>
+    </div>
+    <div class="test-content">
+        <h2>@Model.Title</h2>
+
+        <div class="test-info">
+            <p><b>Категория:</b> @Model.TestCategory</p>
+            <p><b>Описание:</b> @Model.Description</p>
+            <p><b>Максимум попыток:</b> @(Model.MaxAttempts == null ? "∞" : Model.MaxAttempts.ToString())</p>
+
+            <p><b>Осталось попыток:</b> @(Model.MaxAttempts == null ? "∞" : Model.AttemptsLeft.ToString())</p>
+        </div>
+
+        @if (Model.MaxAttempts == null || Model.MaxAttempts == 0 || Model.AttemptsLeft > 0)
+        {
+            <form asp-action="StartTest" method="post">
+                <input type="hidden" name="assignmentId" value="@Model.AssignmentId"/>
+                @if(Model.IsAttemptStart)
+                {
+                    <button type="submit" class="btn">Продолжить</button>
+                }
+                else
+                {
+                    <button type="submit" class="btn">Начать тест</button>
+                }                
+            </form>
+        }
+        else
+        {
+            <p class="text-danger">У вас больше нет доступных попыток.</p>
+        }
+    </div>
+</div>

@@ -3,4 +3,9 @@
     Layout = "~/Views/Shared/_LayoutMain.cshtml";
 }
 <h3>Тесты</h3>
-<p>WIP (Work In Progress)</p>
+@model List<testingSite.Models.SupportingModels.StudentAssignment>
+<div class="border shadow-sm p-3 mb-4">
+    <div id="testTable">
+        @Html.Partial("_TestTable", Model)
+    </div>
+</div>

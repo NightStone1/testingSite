@@ -1,0 +1,59 @@
+@model testingSite.Models.DTOs.TestDto
+@{
+    ViewData["Title"] = $"Тест {Model.Title}";
+    Layout = "~/Views/Shared/_LayoutTest.cshtml";
+}
+<div class="container mt-4">
+    <div class="mb-3">
+        <form asp-controller="Student" method="get" asp-action="TakeTest">
+            <input type="hidden" name="id" value="@Model.AssignmentId" />
+            <button type="submit" class="btn">
+                ← Назад
+            </button>
+        </form>
+    </div>
+    <div class="card shadow-sm">
+        <div class="card-header bg-primary text-white">
+            <h4 class="mb-0">Тест: @Model.Title</h4>
+        </div>
+        <div class="card-body">
+            <form asp-controller="Student" asp-action="EndTest" method="post">
+                <input type="hidden" name="assignmentId" value="@Model.AssignmentId" />
+                @for (int i = 0; i < Model.Questions.Count; i++)
+                {
+                    var question = Model.Questions[i];
+                    <div class="mb-4">
+                        <h5>@(i+1). @question.Text</h5>                    
+                        @foreach (var answer in question.Answers)
+                        {
+                            <div class="form-check">
+                                @if (question.IsMultiple)
+                                {
+                                    <input type="checkbox"
+                                            name="Answers[@question.QuestionId]"
+                                            value="@answer.AnswerId"
+                                            class="form-check-input"
+                                            id="answer-@answer.AnswerId" />
+                                }
+                                else
+                                {
+                                    <input type="radio"
+                                            name="Answers[@question.QuestionId]"
+                                            value="@answer.AnswerId"
+                                            class="form-check-input"
+                                            id="answer-@answer.AnswerId" />
+                                }
+                                <label for="answer-@answer.AnswerId" class="form-check-label">
+                                    @answer.Text
+                                </label>
+                            </div>
+                        }
+                    </div>
+                }
+                <div class="text-end">
+                    <button type="submit" class="btn">Закончить тест</button>
+                </div>                     
+            </form>
+        </div>
+    </div>
+</div>

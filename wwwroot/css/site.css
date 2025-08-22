@@ -230,7 +230,42 @@ th {
 }
 
 .assignment-row:hover {
-  background-color: #eef;
+  background-color: #ddd;
+}
+
+.student-test-row {
+  cursor: pointer;
+  background-color: #f9f9f9;
+}
+.student-test-row:hover {
+  background-color: #ddd;
+}
+
+.test-details {
+  position: relative;
+  padding: 2rem;
+  width: fit-content;
+  margin: 0 auto;
+}
+
+.back-button {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  z-index: 10;
+}
+
+.test-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  margin-top: 3rem;
+}
+
+.test-info {
+  text-align: left;
+  width: 100%;
+  max-width: 400px;
 }
 
 .inner-table {

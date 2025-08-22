@@ -1,3 +1,4 @@
+namespace testingSite.Models.SupportingModels;
 public class AssignmentRowViewModel
 {
     public int AssignmentId { get; set; }
@@ -6,7 +7,7 @@ public class AssignmentRowViewModel
     public int UserId { get; set; }
     public string UserName { get; set; }
 
-    
+
     // Группа
     public int GroupId { get; set; }
     public string GroupName { get; set; }

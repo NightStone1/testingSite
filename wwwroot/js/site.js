@@ -214,6 +214,16 @@
     }
     window.addListeners();
 
+    window.addListenersStudentTestRow = function (){
+        document.querySelectorAll('.student-test-row').forEach(row => {
+            row.addEventListener('click', () => {
+                const aId = row.getAttribute('data-id');
+                window.location.href = `/Student/TakeTest/${aId}`;
+            });
+        });
+    }
+    window.addListenersStudentTestRow();
+
     document.addEventListener("click", function (e) {
         const addTestBtn = e.target.closest(".add-test-btn");
         if (!addTestBtn) return;    
@@ -269,6 +279,18 @@
                 if (currentTbody) {
                     currentTbody.innerHTML = newTbodyHtml;
                     addTestsEventListeners();
+                }
+            })
+            .catch(err => console.error("Ошибка при обновлении таблицы:", err));
+    }
+
+    function reloadStudentTestTable() {
+        fetch('/Student/GetTestTable')
+            .then(response => response.text())
+            .then(newTbodyHtml => {
+                const currentTbody = document.getElementById("testTable");
+                if (currentTbody) {
+                    currentTbody.innerHTML = newTbodyHtml;
                 }
             })
             .catch(err => console.error("Ошибка при обновлении таблицы:", err));

@@ -1,6 +1,7 @@
 using System.Diagnostics;
 using Microsoft.AspNetCore.Mvc;
 using testingSite.Models;
+using testingSite.Models.SupportingModels;
 using testingSite.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
@@ -222,7 +223,7 @@ public class TeacherController : Controller
         return PartialView("_TestSingleAssignmentsTableBody", SingleAssignmentRowViewModel());
     }
 
-        public async Task<IActionResult> GetGroupAssignmentsTable()
+    public async Task<IActionResult> GetGroupAssignmentsTable()
     {
         return PartialView("_TestGroupAssignmentsTableBody", GroupAssignmentRowViewModel());
     }
@@ -473,11 +474,6 @@ public class TeacherController : Controller
                 IsCorrect = isCorrect != null && i < isCorrect.Count && isCorrect[i]
             }).ToList()
         };
-        // _context.Questions.Add(new Question
-        // {
-        //     TestId = testId,
-        //     QuestionText = questionText
-        // });
         _context.Questions.Add(question);
         _context.SaveChanges();
 

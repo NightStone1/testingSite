@@ -1,0 +1,55 @@
+@model List<testingSite.Models.SupportingModels.StudentAssignment>
+@{
+    var completed = Model.Where(m => m.IsCompleted).ToList();
+    var notCompleted = Model.Where(m => !m.IsCompleted).ToList();
+}
+<div class="mb-4">
+    <h4>Непройденные назначения</h4>
+    <table>
+        <thead>
+            <tr>
+                <th>Категория</th>
+                <th>Тест</th>
+                <th>Дата</th>
+                <th>Макс. попыток</th>
+                <th>Кол-во попыток</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in notCompleted)
+        {
+            <tr class="student-test-row" data-id="@item.AssignmentId">
+                <td>@item.TestCategory</td>
+                <td>@item.TestName</td>
+                <td>@item.AssignedDate.ToShortDateString()</td>
+                <td>@(item.MaxAttempts == null ? "∞" : item.MaxAttempts.ToString())</td>
+                <td>@item.AttemptsCount</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>
+<div class="mb-4">
+    <h4>Пройденные назначения</h4>
+    <table>
+        <thead>
+            <tr>
+                <th>Категория</th>
+                <th>Тест</th>
+                <th>Дата</th>
+                <th>Оценка</th>
+            </tr>
+        </thead>
+        <tbody>
+        @foreach (var item in completed)
+        {
+            <tr class="student-test-row" data-id="@item.AssignmentId">
+                <td>@item.TestCategory</td>
+                <td>@item.TestName</td>
+                <td>@item.AssignedDate.ToShortDateString()</td>
+                <td>@item.Result</td>
+            </tr>
+        }
+        </tbody>
+    </table>
+</div>

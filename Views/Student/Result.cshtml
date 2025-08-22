@@ -1,0 +1,26 @@
+@model testingSite.Models.SupportingModels.TestResultViewModel
+@{
+    ViewData["Title"] = "Результаты теста";
+    Layout = "~/Views/Shared/_LayoutTest.cshtml";
+}
+
+<div class="result-container">
+    <h2>Результат теста: @Model.TestTitle</h2>
+    <p>Дата завершения: @Model.EndTime.ToString("g")</p>
+    <p>Баллы: <b>@Model.Score</b> из @Model.TotalQuestions</p>
+    <p>Процент: <b>@Model.Percent%</b></p>
+    <p>Статус: 
+        @if (Model.IsPassed)
+        {
+            <span class="text-success">✅ Пройден</span>
+        }
+        else
+        {
+            <span class="text-danger">❌ Не пройден</span>
+        }
+    </p>
+
+    <a asp-controller="Student" asp-action="Tests" method="get" class="btn">
+        🔙 Вернуться к тестам
+    </a>
+</div>

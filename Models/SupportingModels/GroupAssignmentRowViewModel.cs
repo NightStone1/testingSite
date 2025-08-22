@@ -1,3 +1,4 @@
+namespace testingSite.Models.SupportingModels;
 public class GroupAssignmentRowViewModel
 {
     public int GroupAssignmentId { get; set; }

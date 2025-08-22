@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace testingSite.Models;
+namespace testingSite.Models.SupportingModels;
 
 public class AssignmentViewModel
 {
