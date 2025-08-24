@@ -15,14 +15,16 @@ namespace testingSite.Controllers;
 public class UserController : Controller
 {
 
+    private readonly IAppLogger _logger;
     private readonly AppDbContext _context;
 
-    public UserController(AppDbContext context)
+    public UserController(IAppLogger logger, AppDbContext context)
     {
         _context = context;
+        _logger = logger;
     }
 
-    public IActionResult Auth(string returnUrl = null)
+    public async Task<IActionResult> Auth(string returnUrl = null)
     {
         if (User.Identity?.IsAuthenticated == true)
         {
@@ -62,9 +64,17 @@ public class UserController : Controller
                     (role == "teacher" && returnUrl.StartsWith("/teacher", StringComparison.OrdinalIgnoreCase)) ||
                     (role == "student" && returnUrl.StartsWith("/student", StringComparison.OrdinalIgnoreCase)))
                 {
+
                     return Redirect(returnUrl);
+                    
                 }
+
             }
+                _logger.Log(
+                user.Id,
+                "Вход",
+                $"Пользователь с именем {user.Username} совершил вход на сайт."
+            );
             return RedirectToAction("Dashboard");
         }
         ViewBag.Error = "Неверный логин или пароль";
@@ -72,7 +82,7 @@ public class UserController : Controller
         return View();
     }
 
-    public IActionResult Dashboard()
+    public async Task<IActionResult> Dashboard()
     {
         var role = User.FindFirst(ClaimTypes.Role)?.Value?.ToLower();
 
@@ -89,10 +99,15 @@ public class UserController : Controller
     {
         HttpContext.Session.Clear();
         await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        _logger.Log(
+            int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "0"),
+            "Выход",
+            $"Пользователь с именем {User.FindFirstValue(ClaimTypes.Name)} совершил выход с сайта."
+        );
         return RedirectToAction("Auth");
     }
 
-    public IActionResult AccessDenied()
+    public async Task<IActionResult> AccessDenied()
     {
         return View();
     }

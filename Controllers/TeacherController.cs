@@ -6,6 +6,7 @@ using testingSite.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
+using System.Threading.Tasks;
 
 namespace testingSite.Controllers;
 
@@ -25,12 +26,12 @@ public class TeacherController : Controller
         _softDeleteService = softDeleteService;
     }
 
-    public IActionResult Dashboard()
+    public async Task<IActionResult> Dashboard()
     {
         return View();
     }
 
-    public IActionResult Lectures()
+    public async Task<IActionResult> Lectures()
     {
         return PartialView("Lectures");
     }
@@ -71,48 +72,48 @@ public class TeacherController : Controller
         return Ok();
     }
 
-    public IActionResult Tests()
+    public async Task<IActionResult> Tests()
     {
-        var testCategories = _context.TestCategories.Include(tc => tc.Tests).Include(tc => tc.Discipline).OrderBy(tc => tc.Name).ToList();
+        var testCategories = await _context.TestCategories.Include(tc => tc.Tests).Include(tc => tc.Discipline).OrderBy(tc => tc.Name).ToListAsync();
         return PartialView("Tests", testCategories);
     }
 
-    public IActionResult EditTestCategory(int id)
+    public async Task<IActionResult> EditTestCategory(int id)
     {
-        var category = _context.TestCategories.FirstOrDefault(tc => tc.Id == id);
+        var category = await _context.TestCategories.FirstOrDefaultAsync(tc => tc.Id == id);
         if (category == null)
             return NotFound();
 
         return PartialView("EditTestCategory", category);
     }
 
-    public IActionResult EditTest(int id)
+    public async Task<IActionResult> EditTest(int id)
     {
-        var test = _context.Tests.Include(t => t.Questions).ThenInclude(q => q.Answers).FirstOrDefault(c => c.Id == id);
+        var test = await _context.Tests.Include(t => t.Questions).ThenInclude(q => q.Answers).FirstOrDefaultAsync(c => c.Id == id);
         if (test == null)
             return NotFound();
 
         return PartialView("EditTest", test);
     }
 
-    public IActionResult EditQuestion(int Id)
+    public async Task<IActionResult> EditQuestion(int Id)
     {
-        var question = _context.Questions.Include(q => q.Answers).FirstOrDefault(c => c.Id == Id);
+        var question = await _context.Questions.Include(q => q.Answers).FirstOrDefaultAsync(c => c.Id == Id);
         if (question == null)
             return NotFound();
         return PartialView("EditQuestion", question);
     }
     [HttpPost]
-    public IActionResult EditQuestion(int Id, string questionText)
+    public async Task<IActionResult> EditQuestion(int Id, string questionText)
     {
-        var question = _context.Questions.Include(q => q.Answers).Include(q => q.Test).FirstOrDefault(c => c.Id == Id);
+        var question = await _context.Questions.Include(q => q.Answers).Include(q => q.Test).FirstOrDefaultAsync(c => c.Id == Id);
         if (question == null)
             return NotFound();
         var oldQuestionText = question.QuestionText;
         if (oldQuestionText != questionText)
         {
             question.QuestionText = questionText;
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             _logger.Log(
                 int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "0"),
                 "Изменение вопроса",
@@ -123,9 +124,9 @@ public class TeacherController : Controller
     }
 
     [HttpPost]
-    public IActionResult EditTestCategory(string name, int id)
+    public async Task<IActionResult> EditTestCategory(string name, int id)
     {
-        var category = _context.TestCategories.Include(tc => tc.Discipline).FirstOrDefault(tc => tc.Id == id);
+        var category = await _context.TestCategories.Include(tc => tc.Discipline).FirstOrDefaultAsync(tc => tc.Id == id);
         if (category == null)
             return NotFound();
 
@@ -133,7 +134,7 @@ public class TeacherController : Controller
         if (oldName != name)
         {
             category.Name = name;
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             _logger.Log(
                 int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "0"),
                 "Изменение категории",
@@ -144,9 +145,9 @@ public class TeacherController : Controller
     }
 
     [HttpPost]
-    public IActionResult EditTest(string name, string description, int id)
+    public async Task<IActionResult> EditTest(string name, string description, int id)
     {
-        var test = _context.Tests.Include(t => t.TestCategory).FirstOrDefault(t => t.Id == id);
+        var test = await _context.Tests.Include(t => t.TestCategory).FirstOrDefaultAsync(t => t.Id == id);
         if (test == null)
             return NotFound();
 
@@ -155,7 +156,7 @@ public class TeacherController : Controller
         if (oldName != name)
         {
             test.Name = name;
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             _logger.Log(
             int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "0"),
             "Изменение Теста",
@@ -165,7 +166,7 @@ public class TeacherController : Controller
         if (oldDescription != description)
         {
             test.Description = description;
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             _logger.Log(
             int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "0"),
             "Изменение Теста",
@@ -175,14 +176,14 @@ public class TeacherController : Controller
     }
 
 
-    public IActionResult CreateTestCategory()
+    public async Task<IActionResult> CreateTestCategory()
     {
-        var disciplines = _context.Disciplines.OrderBy(d => d.Name).ToList();
+        var disciplines = await _context.Disciplines.OrderBy(d => d.Name).ToListAsync();
         return PartialView("CreateTestCategory", disciplines);
     }
 
     [HttpPost]
-    public IActionResult CreateTestCategory(string name, string disciplineId, string disciplineName)
+    public async Task<IActionResult> CreateTestCategory(string name, string disciplineId, string disciplineName)
     {
         if (!string.IsNullOrWhiteSpace(disciplineId) && int.TryParse(disciplineId, out int parsedId))
         {
@@ -191,7 +192,7 @@ public class TeacherController : Controller
                 Name = name,
                 DisciplineId = parsedId
             });
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
             _logger.Log(
                 int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "0"),
                 "Создание категории",
@@ -202,13 +203,13 @@ public class TeacherController : Controller
         var disciplines = _context.Disciplines.OrderBy(d => d.Name).ToList();
         return PartialView("CreateTestCategory", disciplines);
     }
-    public IActionResult GetTestTableBody()
+    public async Task<IActionResult> GetTestTableBody()
     {
-        var categories = _context.TestCategories
+        var categories = await _context.TestCategories
             .Include(c => c.Discipline)
             .Include(c => c.Tests)
             .OrderBy(tc => tc.Name)
-            .ToList();
+            .ToListAsync();
         return PartialView("_TestTableBody", categories);
     }
 
@@ -260,24 +261,24 @@ public class TeacherController : Controller
 
 
 
-    public IActionResult CreateTest()
+    public async Task<IActionResult> CreateTest()
     {
         return PartialView("CreateTest");
     }
 
     [HttpPost]
-    public IActionResult CreateTest(string name, string categoryId, string categoryName, string description)
+    public async Task<IActionResult> CreateTest(string name, string categoryId, string categoryName, string description)
     {
         if (!string.IsNullOrWhiteSpace(categoryId) && int.TryParse(categoryId, out int parsedId))
         {
-            _context.Tests.Add(new Test
+            await _context.Tests.AddAsync(new Test
             {
                 Name = name,
                 Description = description,
                 TestCategoryId = parsedId,
                 CreatedDate = DateTime.Now
             });
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
 
             _logger.Log(
                 int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "0"),
@@ -293,12 +294,12 @@ public class TeacherController : Controller
     }
 
 
-    public IActionResult Progress()
+    public async Task<IActionResult> Progress()
     {
         return PartialView("Progress");
     }
 
-    public IActionResult LecturesAssignments()
+    public async Task<IActionResult> LecturesAssignments()
     {
         return PartialView("LecturesAssignments");
     }
@@ -309,8 +310,8 @@ public class TeacherController : Controller
             .Include(ga => ga.Group)
             .Include(ga => ga.Test)
                 .ThenInclude(t => t.TestCategory)
-            .Include(ga => ga.Assignments) // <-- это лучше добавить, чтобы сразу подтянуть назначения
-                .ThenInclude(a => a.User) // <-- и юзеров, если будешь выводить
+            .Include(ga => ga.Assignments)
+                .ThenInclude(a => a.User)
             .Select(ga => new GroupAssignmentRowViewModel
             {
                 GroupAssignmentId = ga.Id,
@@ -327,7 +328,7 @@ public class TeacherController : Controller
                     .Select(a => new AssignmentRowViewModel
                     {
                         AssignmentId = a.Id,
-                        UserId = a.User.Id, // добавь, если будешь показывать студентов
+                        UserId = a.User.Id,
                         UserName = a.User.Username,
                         IsCompleted = a.IsCompleted,
                         AttemptsCount = a.Attempts.Count,
@@ -367,7 +368,7 @@ public class TeacherController : Controller
         return singleAssignments;
     }
     
-    public IActionResult TestsAssignments()
+    public async Task<IActionResult> TestsAssignments()
     {
 
         var model = new AssignmentViewModel
@@ -383,7 +384,7 @@ public class TeacherController : Controller
     }
 
     [HttpPost]
-    public IActionResult TestsAssignments(string assignmentType, int groupSelect, int studentSelect, int testCategory, int test, int countAttempts)
+    public async Task<IActionResult> TestsAssignments(string assignmentType, int groupSelect, int studentSelect, int testCategory, int test, int countAttempts)
     {
         var now = DateTime.Now;
         if (assignmentType == "group")
@@ -406,8 +407,8 @@ public class TeacherController : Controller
                 MaxAttempts = countAttempts != 0 ? countAttempts : null,
                 AssignedDate = now
             };
-            _context.GroupAssignments.Add(groupAssignment);
-            _context.SaveChanges();
+            await _context.GroupAssignments.AddAsync(groupAssignment);
+            await _context.SaveChangesAsync();
 
             foreach (var student in students)
             {
@@ -419,9 +420,14 @@ public class TeacherController : Controller
                     MaxAttempts = countAttempts != 0 ? countAttempts : null,
                     AssignedDate = now
                 };
-                _context.Assignments.Add(assignment);
+                await _context.Assignments.AddAsync(assignment);
             }
-            _context.SaveChanges();
+            await _context.SaveChangesAsync();
+            _logger.Log(
+                int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "0"),
+                "Cоздание назначения",
+                $"Создано групповое назначение. id Группы: {groupSelect}."
+            );            
             return Ok();
         }
         if (assignmentType == "single")
@@ -437,8 +443,13 @@ public class TeacherController : Controller
                 MaxAttempts = countAttempts != 0 ? countAttempts : null,
                 AssignedDate = now
             };
-            _context.Assignments.Add(assignment);
-            _context.SaveChanges();
+            await _context.Assignments.AddAsync(assignment);
+            await _context.SaveChangesAsync();
+            _logger.Log(
+                int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "0"),
+                "Cоздание назначения",
+                $"Создано одиночное назначение. id студента: {studentSelect}."
+            );
             return Ok();
         }
         return BadRequest("Заполните все обязательные поля.");
@@ -446,20 +457,20 @@ public class TeacherController : Controller
 
     
     [HttpGet]
-    public IActionResult Questions(int testId)
+    public async Task<IActionResult> Questions(int testId)
     {
         ViewBag.TestId = testId;
         return PartialView("AddQuestion");
     }
 
     [HttpPost]
-    public IActionResult Questions(int testId, string questionText, List<string> answers, List<bool> isCorrect)
+    public async Task<IActionResult> Questions(int testId, string questionText, List<string> answers, List<bool> isCorrect)
     {
         if (string.IsNullOrWhiteSpace(questionText) || answers == null || answers.Count == 0)
         {
             return BadRequest("Заполните все обязательные поля.");
         }
-        var testExists = _context.Tests.Any(t => t.Id == testId);
+        var testExists = await _context.Tests.AnyAsync(t => t.Id == testId);
         if (!testExists)
         {
             return NotFound();
@@ -474,8 +485,8 @@ public class TeacherController : Controller
                 IsCorrect = isCorrect != null && i < isCorrect.Count && isCorrect[i]
             }).ToList()
         };
-        _context.Questions.Add(question);
-        _context.SaveChanges();
+        await _context.Questions.AddAsync(question);
+        await _context.SaveChangesAsync();
 
         _logger.Log(
             int.Parse(User.FindFirstValue(ClaimTypes.NameIdentifier) ?? "0"),
